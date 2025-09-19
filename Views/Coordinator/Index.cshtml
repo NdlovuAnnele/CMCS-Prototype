@@ -1,0 +1,27 @@
+﻿@{
+    ViewData["Title"] = "Coordinator Dashboard";
+}
+
+<h2>Coordinator Dashboard</h2>
+
+<h4>Claims Pending Verification</h4>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Lecturer</th>
+            <th>Month</th>
+            <th>Hours</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>John Doe</td>
+            <td>August 2025</td>
+            <td>20</td>
+            <td><span class="badge bg-warning">Pending</span></td>
+            <td><a class="btn btn-sm btn-primary" href="/Coordinator/Review/1">Review</a></td>
+        </tr>
+    </tbody>
+</table>

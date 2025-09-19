@@ -1,0 +1,9 @@
+# Visual Studio cache and settings
+.vs/
+*.user
+*.suo
+*.vscode/
+
+# Build results
+bin/
+obj/
