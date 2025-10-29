@@ -1,9 +1,23 @@
-# Visual Studio cache and settings
+# VS / .NET
 .vs/
 *.user
 *.suo
-*.vscode/
+*.userosscache
+*.sln.docstates
 
-# Build results
+# Build artifacts
 bin/
 obj/
+[TestResults]/
+*.trx
+*.coverage*
+*.testsettings
+*.runsettings
+
+# Rider/VSCode (optional)
+.idea/
+.vscode/
+
+# OS junk
+Thumbs.db
+.DS_Store

@@ -1,0 +1,46 @@
+﻿@model CMCS.Models.Claim
+@{
+    ViewData["Title"] = "Submit Claim";
+}
+
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Submit Monthly Claim</h2>
+
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <form asp-action="SubmitClaim" method="post" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label asp-for="HoursWorked" class="form-label"></label>
+            <input asp-for="HoursWorked" class="form-control" />
+            <span asp-validation-for="HoursWorked" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="HourlyRate" class="form-label"></label>
+            <input asp-for="HourlyRate" class="form-control" />
+            <span asp-validation-for="HourlyRate" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Notes" class="form-label"></label>
+            <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="SupportingDocument" class="form-label"></label>
+            <input asp-for="SupportingDocument" type="file" class="form-control" />
+            <span asp-validation-for="SupportingDocument" class="text-danger"></span>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100 py-2 fs-5">
+            Submit Claim
+        </button>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

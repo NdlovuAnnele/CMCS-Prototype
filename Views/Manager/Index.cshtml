@@ -1,27 +1,50 @@
-﻿@{
-    ViewData["Title"] = "Manager Dashboard";
+﻿@model List<CMCS.Models.Claim>
+@{
+    ViewData["Title"] = "Academic Manager Dashboard";
 }
 
-<h2>Manager Dashboard</h2>
+<div class="container mt-5">
+    <h2 class="text-center mb-4">Academic Manager - Pending Claims</h2>
 
-<h4>Claims Pending Approval</h4>
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>Lecturer</th>
-            <th>Month</th>
-            <th>Hours</th>
-            <th>Status</th>
-            <th>Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>John Doe</td>
-            <td>August 2025</td>
-            <td>20</td>
-            <td><span class="badge bg-info">Verified</span></td>
-            <td><a class="btn btn-sm btn-primary" href="/Manager/Approve/1">Review</a></td>
-        </tr>
-    </tbody>
-</table>
+    @if (TempData["Message"] != null)
+    {
+        <div class="alert alert-success">@TempData["Message"]</div>
+    }
+
+    <table class="table table-hover shadow-sm">
+        <thead class="table-primary">
+            <tr>
+                <th>ID</th>
+                <th>Hours Worked</th>
+                <th>Hourly Rate</th>
+                <th>Total</th>
+                <th>Notes</th>
+                <th>Submitted</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var claim in Model)
+            {
+                <tr>
+                    <td>@claim.Id</td>
+                    <td>@claim.HoursWorked</td>
+                    <td>R @claim.HourlyRate</td>
+                    <td><strong>R @(claim.HoursWorked * (double)claim.HourlyRate)</strong></td>
+                    <td>@claim.Notes</td>
+                    <td>@claim.SubmissionDate.ToShortDateString()</td>
+                    <td>
+                        <form method="post" asp-action="Approve" class="d-inline">
+                            <input type="hidden" name="id" value="@claim.Id" />
+                            <button class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                        <form method="post" asp-action="Reject" class="d-inline">
+                            <input type="hidden" name="id" value="@claim.Id" />
+                            <button class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
