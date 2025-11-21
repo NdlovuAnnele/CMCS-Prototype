@@ -1,8 +1,70 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Contract Monthly Claim System";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+<div class="container mt-5">
+
+    <!-- Hero Section -->
+    <div class="p-5 mb-4 bg-dark text-white rounded-3 shadow">
+        <div class="container-fluid py-5">
+            <h1 class="display-5 fw-bold">Contract Monthly Claim System (CMCS)</h1>
+            <p class="col-md-8 fs-5 mt-3">
+                A streamlined platform for submitting, verifying, and approving Independent Contractor
+                monthly claims. Designed for accuracy, transparency, and improved administrative workflow.
+            </p>
+            <a href="/Lecturer" class="btn btn-warning btn-lg px-4 me-3 fw-bold">Lecturer Portal</a>
+            <a href="/Coordinator" class="btn btn-outline-light btn-lg px-4 me-3">Coordinator Portal</a>
+            <a href="/Manager" class="btn btn-outline-light btn-lg px-4">Manager Portal</a>
+        </div>
+    </div>
+
+    <!-- Features Section -->
+    <div class="row text-center mt-5">
+
+        <h2 class="mb-4 fw-bold">System Features</h2>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="fw-bold">📄 Easy Claim Submission</h4>
+                    <p class="mt-2">
+                        Lecturers can submit their monthly claims with automated calculations
+                        and document uploads.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="fw-bold">✔ Coordinator Verification</h4>
+                    <p class="mt-2">
+                        Coordinators can verify claims, detect suspicious entries, and send
+                        claims for final approval.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4 mb-4">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <h4 class="fw-bold">🔐 Manager Approval</h4>
+                    <p class="mt-2">
+                        Academic Managers review verified claims and approve or reject with full transparency.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="text-center text-muted mt-5 mb-3">
+        <small>
+            © @DateTime.Now.Year — CMCS Prototype (POE).
+            Built with ASP.NET Core MVC · SQL Server · Entity Framework Core
+        </small>
+    </footer>
+
 </div>
