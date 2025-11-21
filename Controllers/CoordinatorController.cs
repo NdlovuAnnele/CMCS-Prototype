@@ -1,6 +1,7 @@
 ﻿using CMCS.data;
 using CMCS.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CMCS.Controllers
 {
@@ -42,15 +43,15 @@ namespace CMCS.Controllers
                     claim.Status = ClaimStatus.VerifiedByCoordinator;
                     _context.SaveChanges();
 
-                    TempData["Message"] = $"Claim #{id} has been verified by Coordinator.";
+                    TempData["Message"] = $"Claim #{id} verified successfully.";
                 }
-                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                TempData["Error"] = $"Error approving claim #{id}: {ex.Message}";
-                return RedirectToAction("Error", "Home");
+                TempData["Message"] = "Error approving claim: " + ex.Message;
             }
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -64,15 +65,15 @@ namespace CMCS.Controllers
                     claim.Status = ClaimStatus.Rejected;
                     _context.SaveChanges();
 
-                    TempData["Message"] = $"Claim #{id} has been rejected by Coordinator.";
+                    TempData["Message"] = $"Claim #{id} rejected successfully.";
                 }
-                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                TempData["Error"] = $"Error rejecting claim #{id}: {ex.Message}";
-                return RedirectToAction("Error", "Home");
+                TempData["Message"] = "Error rejecting claim: " + ex.Message;
             }
+
+            return RedirectToAction("Index");
         }
     }
 }

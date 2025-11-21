@@ -40,5 +40,6 @@ namespace CMCS.Models
         public DateTime SubmissionDate { get; set; } = DateTime.Now;
 
         public ClaimStatus Status { get; set; } = ClaimStatus.Pending;
+
     }
 }

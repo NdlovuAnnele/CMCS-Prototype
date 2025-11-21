@@ -1,6 +1,7 @@
 ﻿using CMCS.data;
 using CMCS.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace CMCS.Controllers
 {
@@ -17,6 +18,7 @@ namespace CMCS.Controllers
         {
             try
             {
+                // Manager sees only claims verified by Coordinator
                 var claims = _context.Claims
                     .Where(c => c.Status == ClaimStatus.VerifiedByCoordinator)
                     .OrderBy(c => c.SubmissionDate)
@@ -37,20 +39,21 @@ namespace CMCS.Controllers
             try
             {
                 var claim = _context.Claims.FirstOrDefault(c => c.Id == id);
+
                 if (claim != null)
                 {
                     claim.Status = ClaimStatus.ApprovedByManager;
                     _context.SaveChanges();
 
-                    TempData["Message"] = $"Claim #{id} approved by Academic Manager.";
+                    TempData["Message"] = $"Claim #{id} approved by Manager.";
                 }
-                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                TempData["Error"] = $"Error approving claim #{id}: {ex.Message}";
-                return RedirectToAction("Error", "Home");
+                TempData["Message"] = $"Error approving claim: {ex.Message}";
             }
+
+            return RedirectToAction("Index");
         }
 
         [HttpPost]
@@ -59,20 +62,21 @@ namespace CMCS.Controllers
             try
             {
                 var claim = _context.Claims.FirstOrDefault(c => c.Id == id);
+
                 if (claim != null)
                 {
                     claim.Status = ClaimStatus.Rejected;
                     _context.SaveChanges();
 
-                    TempData["Message"] = $"Claim #{id} rejected by Academic Manager.";
+                    TempData["Message"] = $"Claim #{id} rejected by Manager.";
                 }
-                return RedirectToAction("Index");
             }
             catch (Exception ex)
             {
-                TempData["Error"] = $"Error rejecting claim #{id}: {ex.Message}";
-                return RedirectToAction("Error", "Home");
+                TempData["Message"] = $"Error rejecting claim: {ex.Message}";
             }
+
+            return RedirectToAction("Index");
         }
     }
 }
