@@ -1,14 +1,24 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CMCS.data;
 using CMCS.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CMCS.Controllers
 {
     public class LecturerController : Controller
     {
+        private readonly ApplicationDbContext _context;
+
+        public LecturerController(ApplicationDbContext context)
+        {
+            _context = context;
+        }
+
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            // Show all claims for now (later: filter by lecturer)
+            var claims = _context.Claims.OrderByDescending(c => c.SubmissionDate).ToList();
+            return View(claims);
         }
 
         [HttpGet]
@@ -46,7 +56,7 @@ namespace CMCS.Controllers
                         if (!Directory.Exists(uploadsFolder))
                             Directory.CreateDirectory(uploadsFolder);
 
-                        var uniqueFileName = Guid.NewGuid().ToString() + "_" + claim.SupportingDocument.FileName;
+                        var uniqueFileName = Guid.NewGuid() + "_" + claim.SupportingDocument.FileName;
                         var filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                         using (var fileStream = new FileStream(filePath, FileMode.Create))
@@ -56,6 +66,12 @@ namespace CMCS.Controllers
 
                         claim.FileName = claim.SupportingDocument.FileName;
                     }
+
+                    claim.SubmissionDate = DateTime.Now;
+                    claim.Status = ClaimStatus.Pending;
+
+                    _context.Claims.Add(claim);
+                    _context.SaveChanges();
 
                     TempData["Success"] = $"Claim submitted successfully! {(claim.FileName != null ? $"Uploaded file: {claim.FileName}" : "")}";
                     return RedirectToAction("Confirmation");
@@ -76,3 +92,4 @@ namespace CMCS.Controllers
         }
     }
 }
+

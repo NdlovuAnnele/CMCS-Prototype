@@ -1,45 +1,79 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using CMCS.data;
 using CMCS.Models;
+using Microsoft.AspNetCore.Mvc;
 
 namespace CMCS.Controllers
 {
     public class ManagerController : Controller
     {
-        // Mock data for testing
-        public static List<Claim> PendingClaims = new List<Claim>
+        private readonly ApplicationDbContext _context;
+
+        public ManagerController(ApplicationDbContext context)
         {
-            new Claim { Id = 3, HoursWorked = 12, HourlyRate = 280, Notes = "Moderator duty", SubmissionDate = DateTime.Now },
-            new Claim { Id = 4, HoursWorked = 10, HourlyRate = 300, Notes = "Marking", SubmissionDate = DateTime.Now.AddDays(-1) }
-        };
+            _context = context;
+        }
 
         public IActionResult Index()
         {
-            return View(PendingClaims);
+            try
+            {
+                var claims = _context.Claims
+                    .Where(c => c.Status == ClaimStatus.VerifiedByCoordinator)
+                    .OrderBy(c => c.SubmissionDate)
+                    .ToList();
+
+                return View(claims);
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error loading manager claims: {ex.Message}";
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         [HttpPost]
         public IActionResult Approve(int id)
         {
-            var claim = PendingClaims.FirstOrDefault(c => c.Id == id);
-            if (claim != null)
+            try
             {
-                claim.Status = ClaimStatus.ApprovedByManager;
-                TempData["Message"] = $"Claim #{id} approved by Academic Manager.";
+                var claim = _context.Claims.FirstOrDefault(c => c.Id == id);
+                if (claim != null)
+                {
+                    claim.Status = ClaimStatus.ApprovedByManager;
+                    _context.SaveChanges();
+
+                    TempData["Message"] = $"Claim #{id} approved by Academic Manager.";
+                }
+                return RedirectToAction("Index");
             }
-            return RedirectToAction("Index");
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error approving claim #{id}: {ex.Message}";
+                return RedirectToAction("Error", "Home");
+            }
         }
 
         [HttpPost]
         public IActionResult Reject(int id)
         {
-            var claim = PendingClaims.FirstOrDefault(c => c.Id == id);
-            if (claim != null)
+            try
             {
-                claim.Status = ClaimStatus.Rejected;
-                TempData["Message"] = $"Claim #{id} rejected by Academic Manager.";
-            }
-            return RedirectToAction("Index");
-        }
+                var claim = _context.Claims.FirstOrDefault(c => c.Id == id);
+                if (claim != null)
+                {
+                    claim.Status = ClaimStatus.Rejected;
+                    _context.SaveChanges();
 
+                    TempData["Message"] = $"Claim #{id} rejected by Academic Manager.";
+                }
+                return RedirectToAction("Index");
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = $"Error rejecting claim #{id}: {ex.Message}";
+                return RedirectToAction("Error", "Home");
+            }
+        }
     }
 }
+
