@@ -3,44 +3,91 @@
     ViewData["Title"] = "Submit Claim";
 }
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">Submit Monthly Claim</h2>
+<div class="container mt-4 mb-5">
 
-    @if (TempData["Success"] != null)
+    <h2 class="mb-4 text-center">Submit Monthly Claim</h2>
+
+    @if (TempData["Error"] != null)
     {
-        <div class="alert alert-success">@TempData["Success"]</div>
+        <div class="alert alert-danger">@TempData["Error"]</div>
     }
 
-    <form asp-action="SubmitClaim" method="post" enctype="multipart/form-data">
+    <form asp-action="SubmitClaim" method="post" enctype="multipart/form-data" class="border p-4 rounded shadow-sm">
+
         <div class="mb-3">
-            <label asp-for="HoursWorked" class="form-label"></label>
-            <input asp-for="HoursWorked" class="form-control" />
+            <label class="form-label fw-bold">Lecturer Name</label>
+            <input asp-for="LecturerName" class="form-control" required />
+            <span asp-validation-for="LecturerName" class="text-danger"></span>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Hours Worked</label>
+            <input asp-for="HoursWorked" class="form-control" id="HoursWorked" type="number" min="1" max="200" required />
             <span asp-validation-for="HoursWorked" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="HourlyRate" class="form-label"></label>
-            <input asp-for="HourlyRate" class="form-control" />
+            <label class="form-label fw-bold">Hourly Rate (R)</label>
+            <input asp-for="HourlyRate" class="form-control" id="HourlyRate" type="number" min="50" max="2000" required />
             <span asp-validation-for="HourlyRate" class="text-danger"></span>
         </div>
 
         <div class="mb-3">
-            <label asp-for="Notes" class="form-label"></label>
-            <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+            <label class="form-label fw-bold">Total Payment (Auto-Calculated)</label>
+            <input type="text" class="form-control" id="TotalPayment" readonly style="background:#f8f9fa;" />
         </div>
 
         <div class="mb-3">
-            <label asp-for="SupportingDocument" class="form-label"></label>
+            <label class="form-label fw-bold">Additional Notes</label>
+            <textarea asp-for="Notes" class="form-control"></textarea>
+            <span asp-validation-for="Notes" class="text-danger"></span>
+        </div>
+
+        <div class="mb-4">
+            <label class="form-label fw-bold">Upload Supporting Document</label>
             <input asp-for="SupportingDocument" type="file" class="form-control" />
             <span asp-validation-for="SupportingDocument" class="text-danger"></span>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100 py-2 fs-5">
-            Submit Claim
-        </button>
+        <button type="submit" class="btn btn-primary w-100 py-2 fw-bold">Submit Claim</button>
+
     </form>
+
 </div>
 
 @section Scripts {
-    <partial name="_ValidationScriptsPartial" />
+    <script>
+
+        // Auto calculate total payment
+        function updateTotal() {
+            var hours = parseFloat(document.getElementById("HoursWorked").value) || 0;
+            var rate = parseFloat(document.getElementById("HourlyRate").value) || 0;
+
+            var total = hours * rate;
+
+            document.getElementById("TotalPayment").value =
+                total > 0 ? "R " + total.toFixed(2) : "";
+        }
+
+        document.getElementById("HoursWorked").addEventListener("input", updateTotal);
+        document.getElementById("HourlyRate").addEventListener("input", updateTotal);
+
+        // Front-end validation
+        document.getElementById("HoursWorked").addEventListener("input", function () {
+            if (this.value < 1 || this.value > 200) {
+                this.setCustomValidity("Hours must be between 1 and 200.");
+            } else {
+                this.setCustomValidity("");
+            }
+        });
+
+        document.getElementById("HourlyRate").addEventListener("input", function () {
+            if (this.value < 50 || this.value > 2000) {
+                this.setCustomValidity("Rate must be between R50 and R2000.");
+            } else {
+                this.setCustomValidity("");
+            }
+        });
+
+    </script>
 }
