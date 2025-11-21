@@ -42,15 +42,21 @@ namespace CMCS.Controllers
 
                 if (claim != null)
                 {
-                    claim.Status = ClaimStatus.ApprovedByManager;
-                    _context.SaveChanges();
-
-                    TempData["Message"] = $"Claim #{id} approved by Manager.";
+                    if (claim.Status != ClaimStatus.VerifiedByCoordinator)
+                    {
+                        TempData["Error"] = $"Claim #{id} is not verified by Coordinator and cannot be approved.";
+                    }
+                    else
+                    {
+                        claim.Status = ClaimStatus.ApprovedByManager;
+                        _context.SaveChanges();
+                        TempData["Message"] = $"Claim #{id} approved by Manager.";
+                    }
                 }
             }
             catch (Exception ex)
             {
-                TempData["Message"] = $"Error approving claim: {ex.Message}";
+                TempData["Error"] = $"Error approving claim: {ex.Message}";
             }
 
             return RedirectToAction("Index");
@@ -65,19 +71,26 @@ namespace CMCS.Controllers
 
                 if (claim != null)
                 {
-                    claim.Status = ClaimStatus.Rejected;
-                    _context.SaveChanges();
-
-                    TempData["Message"] = $"Claim #{id} rejected by Manager.";
+                    if (claim.Status != ClaimStatus.VerifiedByCoordinator)
+                    {
+                        TempData["Error"] = $"Claim #{id} is not verified by Coordinator and cannot be rejected by Manager.";
+                    }
+                    else
+                    {
+                        claim.Status = ClaimStatus.Rejected;
+                        _context.SaveChanges();
+                        TempData["Message"] = $"Claim #{id} rejected by Manager.";
+                    }
                 }
             }
             catch (Exception ex)
             {
-                TempData["Message"] = $"Error rejecting claim: {ex.Message}";
+                TempData["Error"] = $"Error rejecting claim: {ex.Message}";
             }
 
             return RedirectToAction("Index");
         }
+
     }
 }
 

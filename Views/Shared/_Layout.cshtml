@@ -25,9 +25,39 @@
         </div>
     </nav>
 
-    <div class="container mt-4">
+    <main role="main" class="pb-3">
+
+        @* GLOBAL ALERTS *@
+        @if (TempData["Success"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-success text-center">
+                    @TempData["Success"]
+                </div>
+            </div>
+        }
+
+        @if (TempData["Message"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-info text-center">
+                    @TempData["Message"]
+                </div>
+            </div>
+        }
+
+        @if (TempData["Error"] != null)
+        {
+            <div class="container mt-3">
+                <div class="alert alert-danger text-center">
+                    @TempData["Error"]
+                </div>
+            </div>
+        }
+
         @RenderBody()
-    </div>
+    </main>
+
 
     <footer class="text-center mt-5 py-3 border-top">
         <p>&copy; 2025 Contract Monthly Claim System</p>

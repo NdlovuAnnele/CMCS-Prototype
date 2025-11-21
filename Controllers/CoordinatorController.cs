@@ -40,15 +40,21 @@ namespace CMCS.Controllers
                 var claim = _context.Claims.FirstOrDefault(c => c.Id == id);
                 if (claim != null)
                 {
-                    claim.Status = ClaimStatus.VerifiedByCoordinator;
-                    _context.SaveChanges();
-
-                    TempData["Message"] = $"Claim #{id} verified successfully.";
+                    if (claim.Status != ClaimStatus.Pending)
+                    {
+                        TempData["Error"] = $"Claim #{id} is no longer pending and cannot be verified again.";
+                    }
+                    else
+                    {
+                        claim.Status = ClaimStatus.VerifiedByCoordinator;
+                        _context.SaveChanges();
+                        TempData["Message"] = $"Claim #{id} verified successfully by Coordinator.";
+                    }
                 }
             }
             catch (Exception ex)
             {
-                TempData["Message"] = "Error approving claim: " + ex.Message;
+                TempData["Error"] = "Error approving claim: " + ex.Message;
             }
 
             return RedirectToAction("Index");
@@ -62,18 +68,25 @@ namespace CMCS.Controllers
                 var claim = _context.Claims.FirstOrDefault(c => c.Id == id);
                 if (claim != null)
                 {
-                    claim.Status = ClaimStatus.Rejected;
-                    _context.SaveChanges();
-
-                    TempData["Message"] = $"Claim #{id} rejected successfully.";
+                    if (claim.Status != ClaimStatus.Pending)
+                    {
+                        TempData["Error"] = $"Claim #{id} is no longer pending and cannot be rejected by Coordinator.";
+                    }
+                    else
+                    {
+                        claim.Status = ClaimStatus.Rejected;
+                        _context.SaveChanges();
+                        TempData["Message"] = $"Claim #{id} rejected by Coordinator.";
+                    }
                 }
             }
             catch (Exception ex)
             {
-                TempData["Message"] = "Error rejecting claim: " + ex.Message;
+                TempData["Error"] = "Error rejecting claim: " + ex.Message;
             }
 
             return RedirectToAction("Index");
         }
+
     }
 }

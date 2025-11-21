@@ -26,6 +26,8 @@ namespace CMCS.Models
 
         [Required(ErrorMessage = "Please enter hourly rate.")]
         [Range(50, 2000, ErrorMessage = "Hourly rate must be reasonable.")]
+       
+        [Column(TypeName = "decimal(10,2)")]
         public decimal HourlyRate { get; set; }
 
         [Display(Name = "Additional Notes")]
